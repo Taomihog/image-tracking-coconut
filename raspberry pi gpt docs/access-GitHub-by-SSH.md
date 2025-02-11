@@ -25,7 +25,7 @@ ssh-keygen -t ed25519 -C "your_email@example.com"
 2. Copy the entire output.
 
 3. Go to GitHub:
-   - Navigate to **Settings > SSH and GPG keys**.
+   - Navigate to **Settings > SSH and GPG keys** (https://github.com/settings/keys, not the deploy key!)
    - Click **New SSH key**.
    - Paste the public key and give it a title.
    - Save the key.
@@ -49,6 +49,32 @@ ssh -T git@github.com
 If everything is configured correctly, you'll see:
 ```
 Hi username! You've successfully authenticated, but GitHub does not provide shell access.
+```
+
+#### A potential issue on rpi4 and fix:
+
+when running the above command, there might be an error like this:
+```bash
+/etc/ssh/ssh_config: line 23: Bad configuration option: stricthostkeycheck
+/etc/ssh/ssh_config: terminating, 1 bad configuration options
+```
+
+Edit the SSH Configuration File: Open the SSH config file in your favorite text editor:
+
+```bash
+sudo vim /etc/ssh/ssh_config
+```
+
+Locate the Incorrect Line: Find the line that says:
+
+```bash
+stricthostkeycheck
+```
+
+Correct it to:
+
+```bash
+StrictHostKeyChecking
 ```
 
 ---
