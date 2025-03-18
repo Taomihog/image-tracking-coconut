@@ -1,6 +1,5 @@
 #include <iostream>
 #include <fstream>
-#include <string>
 #include <unistd.h> // for usleep
 #include "servo_ctrl.hpp"
 
@@ -59,31 +58,4 @@ bool Servo::WriteToFile(const std::string &path, const std::string &val) {
 	std::cerr << "Error: cannot write to file!" << std::endl;
 	return false;
     }
-}
-
-int main() {
-    Servo *s[] = {new Servo(0), new Servo(1)};
-    s[0]->Enable();
-    s[1]->Enable();
-    double f = 0.0;
-    constexpr double start[] = {0.43,0.0};
-    constexpr double end[] = {0.92, 1.0};
-    constexpr int steps = 1000;
-    constexpr double incre[] = {(end[0] - start[0]) / steps, (end[1] - start[1]) / steps};
-    constexpr double total_time = 5.0; //second
-    constexpr double step_time = total_time * 1000.0 * 1000.0 / steps;
-    for(int i = 0; i < 1000; ++i) {
-	s[0]->Rotate_to(start[0] + incre[0] * i);
-	s[1]->Rotate_to(start[1] + incre[1] * i);
-	usleep(step_time);
-    }
-    s[0]->Rotate_to(start[0] + 0.05);
-    s[1]->Rotate_to((start[1] + end[1]) / 2.0 + 0.05);
-    usleep(1000*1000);
-    s[0]->Rotate_to(start[0]);
-    s[1]->Rotate_to((start[1] + end[1]) / 2.0);
-    usleep(200*1000);
-    s[0]->Disable();
-    s[1]->Disable();
-    return 0;
 }
