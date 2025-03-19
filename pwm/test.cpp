@@ -14,12 +14,12 @@ namespace {
 const int number_of_servos = 2;
 constexpr double start[] = {0.45,0.0}; // 0.43 is the min for servo 0
 constexpr double end[] = {0.85, 1.0}; // 0.92 is the max for servo 0
-constexpr int steps = 500;
+constexpr int steps = 1000;
 constexpr double incre[] = {(end[0] - start[0]) / steps, (end[1] - start[1]) / steps};
 constexpr double idle[] = {start[0], (start[1] + end[1]) / 2.0};
 constexpr double midpoint[] = {(start[0] + end[0]) / 2.0, (start[1] + end[1]) / 2.0};
 constexpr double radius[] = {(end[0] - start[0]) / 3.0, (end[1] - start[1]) / 3.0};
-constexpr double total_time = 5.0; //second
+constexpr double total_time = 40.0; //second
 constexpr double step_time = total_time * 1000.0 * 1000.0 / steps;
 constexpr double step_angle = 2 * 3.1415926 / steps;
 }
@@ -73,23 +73,24 @@ void spinLoop() {
 	s.Enable();
     }
     int i = 0;
+    double x = 0, y = 0;
     while(running.load() && i < INT_MAX) {
-        //helper_look_around(servos);
-        //helper_look_around_2(servos);
-	servos[0].Rotate_to(0.5 * (start[0] + end[0]) + radius[0] * sin(step_angle * i));
-	servos[1].Rotate_to(0.5 * (start[1] + end[1]) + radius[1] * cos(step_angle * i));
+	y = (0.5 * (start[0] + end[0]) + radius[0] * sin(step_angle * i));
+	x = (0.5 * (start[1] + end[1]) + radius[1] * cos(step_angle * i));
+	servos[0].Rotate_to(y);
+	servos[1].Rotate_to(x);
 	usleep(step_time);
 	++i;
     }
+    int restore_steps = 100;
+    for (int i = 0; i <= restore_steps; ++i) {
+	double y1 = (i * idle[0] + (100 - i) * y) / restore_steps;
+	double x1 = (i * idle[1] + (100 - i) * x) / restore_steps;
+	servos[0].Rotate_to(y1);
+	servos[1].Rotate_to(x1);
+	usleep(2000);
+    }
 
-    for (int j = 0; j < servos.size(); ++j) {
-	servos[j].Rotate_to(idle[j] + 0.05);
-    }
-    usleep(1000 * 1000);
-    for (int j = 0; j < servos.size(); ++j) {
-	servos[j].Rotate_to(idle[j]);
-    }
-    usleep(100 * 1000);  
     for (auto& s: servos) {
 	s.Disable();
     }
