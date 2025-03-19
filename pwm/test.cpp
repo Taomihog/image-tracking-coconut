@@ -72,6 +72,15 @@ void spinLoop() {
     for (auto& s: servos) {
 	s.Enable();
     }
+    int starting_steps = 1000;
+    for (int i = 0; i <= starting_steps; ++i) {
+	double y1 = (i * (0.5 * (start[0] + end[0])) + (starting_steps - i) * idle[0]) / starting_steps;
+	double x1 = (i * (0.5 * (start[1] + end[1]) + radius[1]) + (starting_steps - i) * idle[1]) / starting_steps;
+        servos[0].Rotate_to(y1);
+	servos[1].Rotate_to(x1);
+	usleep(200 + i);
+    }	
+
     int i = 0;
     double x = 0, y = 0;
     while(running.load() && i < INT_MAX) {
@@ -82,13 +91,13 @@ void spinLoop() {
 	usleep(step_time);
 	++i;
     }
-    int restore_steps = 100;
+    int restore_steps = 1000;
     for (int i = 0; i <= restore_steps; ++i) {
-	double y1 = (i * idle[0] + (100 - i) * y) / restore_steps;
-	double x1 = (i * idle[1] + (100 - i) * x) / restore_steps;
+	double y1 = (i * idle[0] + (restore_steps - i) * y) / restore_steps;
+	double x1 = (i * idle[1] + (restore_steps - i) * x) / restore_steps;
 	servos[0].Rotate_to(y1);
 	servos[1].Rotate_to(x1);
-	usleep(2000);
+	usleep(200 + i);
     }
 
     for (auto& s: servos) {
