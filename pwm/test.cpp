@@ -19,7 +19,7 @@ constexpr double incre[] = {(end[0] - start[0]) / steps, (end[1] - start[1]) / s
 constexpr double idle[] = {start[0], (start[1] + end[1]) / 2.0};
 constexpr double midpoint[] = {(start[0] + end[0]) / 2.0, (start[1] + end[1]) / 2.0};
 constexpr double radius[] = {(end[0] - start[0]) / 3.0, (end[1] - start[1]) / 3.0};
-constexpr double total_time = 40.0; //second
+constexpr double total_time = 10.0; //second
 constexpr double step_time = total_time * 1000.0 * 1000.0 / steps;
 constexpr double step_angle = 2 * 3.1415926 / steps;
 }
