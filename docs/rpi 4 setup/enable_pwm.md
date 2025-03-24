@@ -1,4 +1,8 @@
-# Enable PWM
+# To enable and control both **PWM0 (GPIO12)** and **PWM1 (GPIO13)** on a Raspberry Pi through file writes to `/sys/class/pwm/pwmchip0`, follow these steps
+
+## **1. Enable the PWM Hardware in Device Tree**
+
+To enable both PWMs (GPIO pin 12 and 13):
 
 ```bash
 sudo vim /boot/firmware/config.txt
@@ -7,24 +11,100 @@ sudo vim /boot/firmware/config.txt
 add this
 
 ```bash
-dtoverlay=pwm-2chan,pin=12,func=4,pin2=13,func2=4
+dtoverlay=pwm-2chan,func=gpio,pin=12,pin2=13
 ```
 
-check
+check if both are activate using:
 
 ```bash
 pinctrl 12
 pinctrl 13
 ```
 
-set if pin 12 and 13 don't work
+if they are not pwm0_0 and pwm0_1, do this command:
 
 ```bash
 pinctrl 12 a0
 pinctrl 13 a0
 ```
 
-example servo control program servo_controller.cpp
+---
+
+## **3. Set Period and Duty Cycle for Both Channels**
+
+PWM period and duty cycle are set in nanoseconds (`ns`).
+
+- Set the period for each channel:
+
+  ```bash
+  echo 1000000 > pwm0/period
+  echo 1000000 > pwm1/period
+  ```
+
+  This sets a period of 1 ms (1 MHz frequency).
+
+- Set the duty cycle (pulse width) for each channel:
+
+  ```bash
+  echo 500000 > pwm0/duty_cycle
+  echo 750000 > pwm1/duty_cycle
+  ```
+
+---
+
+## **4. Enable PWM Output**
+
+Activate the channels:
+
+```bash
+echo 1 > pwm0/enable
+echo 1 > pwm1/enable
+```
+
+---
+
+## **5. Example Bash Script**
+
+Here's a simple script to control both channels:
+
+```bash
+#!/bin/bash
+
+PWM_DIR="/sys/class/pwm/pwmchip0"
+
+# Export both channels
+echo 0 > "$PWM_DIR/export"
+echo 1 > "$PWM_DIR/export"
+
+# Set period and duty cycle
+echo 1000000 > "$PWM_DIR/pwm0/period"
+echo 1000000 > "$PWM_DIR/pwm1/period"
+echo 500000 > "$PWM_DIR/pwm0/duty_cycle"
+echo 750000 > "$PWM_DIR/pwm1/duty_cycle"
+
+# Enable channels
+echo 1 > "$PWM_DIR/pwm0/enable"
+echo 1 > "$PWM_DIR/pwm1/enable"
+
+echo "PWM signals enabled on both channels."
+```
+
+---
+
+## **6. Notes**
+
+- You must run these commands as `sudo`.
+- The Raspberry Pi's GPIO pins for PWM are:
+  - PWM0: GPIO12 (Physical pin 32)
+  - PWM1: GPIO13 (Physical pin 33)
+- Ensure no other peripheral is configured on these pins.
+- Use proper permissions (`chmod`) or execute as root.
+
+Let me know if you need help troubleshooting or modifying this further!
+
+## **7. example servo control program**
+
+servo_controller.cpp
 
 ```cpp
 #include <iostream>

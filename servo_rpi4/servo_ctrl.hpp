@@ -1,5 +1,5 @@
 /*
-To enable both PWMs:
+To enable both PWMs (GPIO pin 12 and 13):
 
 ```bash
 sudo vim /boot/firmware/config.txt
