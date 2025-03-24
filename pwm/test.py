@@ -17,15 +17,22 @@ def send(pwm_id, value):
 dir = True
 i = 0
 steps = 100
-while(1):
-    if dir:
-        i = i + 1
-    else:
-        i = i - 1
-    if i == 0 or i == steps:
-        dir = not dir
-    send(0, 55 + int(i*0.45)) 
+try:
+    while(1):
+        if i == 1000:
+            break
+        if dir:
+            i = i + 1
+        else:
+            i = i - 1
+        if i == 0 or i == steps:
+            dir = not dir
+        send(0, i) 
+        time.sleep(0.1)
+        send(1, i)
+        time.sleep(0.1)
+except KeyboardInterrupt:
+    send(0, 50)
     time.sleep(0.1)
-    send(1, i)
+    send(1, 50)
     time.sleep(0.1)
-
