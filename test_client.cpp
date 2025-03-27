@@ -3,7 +3,7 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 
-#define SERVER_IP "192.168.1.100"  // Replace with your Windows PC IP
+#define SERVER_IP "10.0.0.229"  // Replace with your Windows PC IP
 #define PORT 5000
 
 int main() {

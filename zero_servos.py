@@ -16,5 +16,5 @@ def send(pwm_id, value):
 
 send(0, 48)
 time.sleep(0.1)
-send(1, 47)
+send(1, 44)
 time.sleep(0.1)
