@@ -28,7 +28,7 @@ ssh-keygen -t ed25519 -C "your_email@example.com"
    cat ~/.ssh/id_ed25519.pub
    ```
 
-2. Copy the entire output.
+2. Copy the ENTIRE output.
 
 3. Go to GitHub:
    - Navigate to **Settings > SSH and GPG keys** (<https://github.com/settings/keys>, not the deploy key!)
@@ -40,9 +40,10 @@ ssh-keygen -t ed25519 -C "your_email@example.com"
 
 ## 3. Configure Git to Use SSH
 
-Ensure Git is set to use SSH instead of HTTPS:
+Go to your repositoryEnsure Git is set to use SSH instead of HTTPS:
 
 ```bash
+cd path/to/your/repository
 git remote set-url origin git@github.com:username/repository.git
 ```
 

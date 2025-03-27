@@ -32,7 +32,7 @@ try:
         send(1, i)
         time.sleep(0.1)
 except KeyboardInterrupt:
-    send(0, 49)
+    send(0, 48)
     time.sleep(0.1)
-    send(1, 49)
+    send(1, 44)
     time.sleep(0.1)
