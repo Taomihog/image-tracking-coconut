@@ -1,3 +1,7 @@
+/*
+compile command on Windows:
+g++ -o server server.cpp -lws2_32
+*/
 #include <iostream>
 #include <thread>
 #include <vector>
