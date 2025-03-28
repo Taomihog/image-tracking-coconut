@@ -1,11 +1,14 @@
 #include <string_view>
-#include "servo_328p.hpp"
+#include "Servo_328P.hpp"
 
 int Servo_328P::n_dev = 0; // Initialize static member variable for the number of instances created
 int Servo_328P::serial_fd = -1; // Initialize static member variable for serial file descriptor
 std::mutex Servo_328P::mtx {};
 
-Servo_328P::Servo_328P(int dev_in) : Servo_base(dev_in) { 
+Servo_328P::Servo_328P(int dev_in, double min_rescale, double max_rescale) : Servo_base(dev_in, min_rescale, max_rescale) { 
+    if(dev != 0 && dev != 1) {
+        std::cerr << "dev doesn't exit, use dev = 0." << std::endl;
+    }
     std::lock_guard<std::mutex> lock(mtx); // Ensure thread safety when initializing the serial port
     ++n_dev; // Increment the static counter for the number of instances created
     if (n_dev > 1) {
@@ -42,6 +45,7 @@ double Servo_328P::Rotate_to(double fraction) {
     std::lock_guard<std::mutex> lock(mtx); // Ensure thread safety when accessing the serial port
     if (fraction < 0) fraction = 0;
     if (fraction > 1) fraction = 1;
+    fraction = rescale(fraction);
     uint16_t value = static_cast<uint16_t>(fraction * 1000); 
     unsigned int message = (dev << 28) | (value & 0xFFFF);
     // Close the serial port
