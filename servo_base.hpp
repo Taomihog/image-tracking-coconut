@@ -8,7 +8,7 @@ public:
     virtual bool Disable() { return true; };
     virtual double Rotate_to(double fraction) = 0;  // Rotate the servo to a specified position as a fraction of the full range (0.0 to 1.0)
 protected:
-    int dev;
+    int dev = 0;
 };
 
 
