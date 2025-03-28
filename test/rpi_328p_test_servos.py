@@ -16,10 +16,10 @@ def send(pwm_id, value):
 
 dir = True
 i = 0
-steps = 100
+steps = 1000
 try:
     while(1):
-        if i == 1000:
+        if i == 10000:
             break
         if dir:
             i = i + 1
@@ -28,9 +28,9 @@ try:
         if i == 0 or i == steps:
             dir = not dir
         send(0, i) 
-        time.sleep(0.1)
+        time.sleep(0.01)
         send(1, i)
-        time.sleep(0.1)
+        time.sleep(0.01)
 except KeyboardInterrupt:
     send(0, 48)
     time.sleep(0.1)
