@@ -3,6 +3,7 @@
 
 int Servo_328P::n_dev = 0; // Initialize static member variable for the number of instances created
 int Servo_328P::serial_fd = -1; // Initialize static member variable for serial file descriptor
+std::mutex Servo_328P::mtx {};
 
 Servo_328P::Servo_328P(int dev_in) : Servo_base(dev_in) { 
     std::lock_guard<std::mutex> lock(mtx); // Ensure thread safety when initializing the serial port
