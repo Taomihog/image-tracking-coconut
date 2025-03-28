@@ -6,6 +6,7 @@
 #include <termios.h>    // POSIX terminal control definitions
 #include <unistd.h>     // UNIX standard function definitions
 #include <cstring>      // For memset
+#include "servo_base.hpp"
 
 
 // python code
@@ -38,7 +39,7 @@ public:
     double Rotate_to(double fraction) override;
 private:
     static std::mutex mtx; // Mutex for thread safety when sending commands to the microcontroller
-    static int serial_fd = -1; // Serial file descriptor for communication with the microcontroller
-    static int n_dev = 0;
+    static int serial_fd; // Serial file descriptor for communication with the microcontroller
+    static int n_dev;
     int open_serial();
 };

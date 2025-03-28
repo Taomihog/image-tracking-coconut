@@ -1,9 +1,8 @@
 #include <string_view>
 #include "servo_328p.hpp"
 
-static int Servo_328P::n_dev = 0; // Initialize static member variable for the number of instances created
-static int Servo_328P::serial_fd = -1; // Initialize static member variable for serial file descriptor
-int Servo_328P::dev = 0; // Initialize static member variable for device ID
+int Servo_328P::n_dev = 0; // Initialize static member variable for the number of instances created
+int Servo_328P::serial_fd = -1; // Initialize static member variable for serial file descriptor
 
 Servo_328P::Servo_328P(int dev_in) : Servo_base(dev_in) { 
     std::lock_guard<std::mutex> lock(mtx); // Ensure thread safety when initializing the serial port
@@ -66,7 +65,7 @@ double Servo_328P::Rotate_to(double fraction) {
 }
 
 int Servo_328P::open_serial() {
-    constexpr string_view port = "/dev/ttyUSB0";  // Serial port
+    constexpr std::string_view port = "/dev/ttyUSB0";  // Serial port
     int baudrate = B115200;             // Baud rate
 
     // Open serial port

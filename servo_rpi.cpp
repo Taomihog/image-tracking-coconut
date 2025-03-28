@@ -3,12 +3,11 @@
 #include <unistd.h> // for usleep
 #include "servo_rpi.hpp"
 
-Servo_rpi::dev = 0; // Initialize static member variable for device ID
 std::string path_period = {};
 std::string path_duty_cycle {};
 std::string path_enable {};
 
-Servo_rpi::Servo_rpi(int dev_in): dev(dev_in) {
+Servo_rpi::Servo_rpi(int dev_in): Servo_base(dev_in) {
     if(dev != 0 && dev != 1) {
         std::cout << "dev doesn't exist, use dev = 0." << std::endl;
         dev = 0;
@@ -54,7 +53,7 @@ double Servo_rpi::Rotate_to(double fraction) {
     return fraction;
 }
 
-static bool Servo_rpi::WriteToFile(const std::string &path, const std::string &val) {
+bool Servo_rpi::WriteToFile(const std::string &path, const std::string &val) {
     std::ofstream file(path);
     if(file.is_open()) {
         file << val;

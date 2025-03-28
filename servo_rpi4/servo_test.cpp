@@ -13,7 +13,7 @@
 namespace {
 const int number_of_servos = 2;
 constexpr double start[] = {0.45,0.0}; // 0.43 is the min for servo 0
-constexpr double end[] = {0.85, 1.0}; // 0.92 is the max for servo 0
+constexpr double end[] = {0.99, 1.0}; // 0.92 is the max for servo 0
 constexpr int steps = 100;
 constexpr double incre[] = {(end[0] - start[0]) / steps, (end[1] - start[1]) / steps};
 constexpr double idle[] = {start[0], (start[1] + end[1]) / 2.0};

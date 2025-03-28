@@ -1,8 +1,9 @@
 #include <iostream>
+#include <vector>
 #include "servo_rpi.hpp"
 #include "servo_328p.hpp"
 
-void test(Servo* servos){
+void test(std::vector<Servo_base*> servos){
     while (true) {
         for (int i = 0; i <= 100; i += 10) {
             for(auto servo : servos) { // Iterate over each servo in the array
@@ -36,7 +37,7 @@ int main() {
     Servo_328P right_wheel(1); // Create an instance for the right wheel servo on device 1
     Servo_rpi cam_vertical(0); // Create an instance for the camera vertical servo on PWM device 0 (Raspberry Pi)
     Servo_rpi cam_horizontal(1); // Create an instance for the camera horizontal servo on PWM device 1 (Raspberry Pi)
-    Servo_base* servos[] = { &left_wheel, &right_wheel, &cam_vertical, &cam_horizontal };
+    std::vector<Servo_base*> servos = { &left_wheel, &right_wheel, &cam_vertical, &cam_horizontal };
     
     // test these servos
     test(servos);
