@@ -27,7 +27,7 @@ pinctrl 13 a0
 */
 #pragma once
 #include <string>
-#include "servo_base.hpp" // Include the base class for Servo
+#include "Servo_base.hpp" // Include the base class for Servo
 
 constexpr int DC_L   =   500000;
 constexpr int DC_H   =  2500000;
@@ -42,7 +42,7 @@ class Servo_rpi : public Servo_base {
     // PERIOD is the total period of the PWM signal in nanoseconds (20ms)
     // The class provides methods to enable/disable the servo and rotate it to a specified position as a fraction of the full range (0.0 to 1.0)
 public:
-    Servo_rpi(int dev);
+    Servo_rpi(int dev, double min_rescale = 0.0, double max_rescale = 1.0);
     ~Servo_rpi();
     bool Enable() override; // Enable the PWM output for the servo, setting the period to 20ms
     bool Disable() override; // Disable the PWM output for the servo, effectively turning it off

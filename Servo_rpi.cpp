@@ -1,13 +1,13 @@
 #include <iostream>
 #include <fstream>
 #include <unistd.h> // for usleep
-#include "servo_rpi.hpp"
+#include "Servo_rpi.hpp"
 
 std::string path_period = {};
 std::string path_duty_cycle {};
 std::string path_enable {};
 
-Servo_rpi::Servo_rpi(int dev_in): Servo_base(dev_in) {
+Servo_rpi::Servo_rpi(int dev_in, double min_rescale, double max_rescale): Servo_base(dev_in, min_rescale, max_rescale) {
     if(dev != 0 && dev != 1) {
         std::cout << "dev doesn't exist, use dev = 0." << std::endl;
         dev = 0;
@@ -46,6 +46,9 @@ double Servo_rpi::Rotate_to(double fraction) {
     if (fraction < 0) {
         fraction = 0;
     }
+    //std::cout << "fraction before rescale = " << fraction << ", ";
+    fraction = rescale(fraction);
+    //std::cout << "fraction = " << fraction << std::endl;
 
     const int target_duty_cycle = static_cast<int>(fraction * (DC_H - DC_L)) + DC_L;
     WriteToFile(path_duty_cycle, std::to_string(target_duty_cycle));

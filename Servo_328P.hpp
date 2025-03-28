@@ -6,7 +6,7 @@
 #include <termios.h>    // POSIX terminal control definitions
 #include <unistd.h>     // UNIX standard function definitions
 #include <cstring>      // For memset
-#include "servo_base.hpp"
+#include "Servo_base.hpp"
 
 
 // python code
@@ -34,7 +34,7 @@
 class Servo_328P : public Servo_base {
     // This class controls a servo motor on an Atmega328P microcontroller using the serial communication interface
 public:
-    Servo_328P(int dev_in);
+    Servo_328P(int dev_in, double min_rescale = 0.0, double max_rescale = 1.0); 
     ~Servo_328P();
     double Rotate_to(double fraction) override;
 private:
