@@ -2,7 +2,7 @@ const uint8_t pinRC1 = 9;
 const uint8_t pinRC2 = 10;
 const uint16_t MIN = 2000;// for 180 deg servo: 500 ms
 const uint16_t MAX = 4000;// for 180 deg servo: 2500 ms
-const uint16_t RESOLUTION = (MAX - MIN) / 100;
+const uint16_t RESOLUTION = (MAX - MIN) / 1000;
 const uint32_t PERIOD = 39999;
 void setup() {
   TCCR1A = _BV(COM1A1) | _BV(COM1B1) | _BV(WGM11);
