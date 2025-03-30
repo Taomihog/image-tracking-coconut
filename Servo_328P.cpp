@@ -24,17 +24,18 @@ Servo_328P::Servo_328P(int dev_in, double min_rescale, double max_rescale) : Ser
     if (serial_fd == -1) {
         std::cerr << "Failed to open serial port for Servo_328P\n";
         return; // If the serial port cannot be opened, exit the constructor
-    } 
-    unsigned int test = (FF << 28) | 0xFFFF;
+    }
+    // special code for connection testing 
+    unsigned int test = 0xF << 28;
     ssize_t bytes_written = write(serial_fd, &test, sizeof(test));
     if (bytes_written == -1) {
         std::cerr << "Error writing to serial port during initialization\n";
         return; // If the write operation fails, exit the constructor
-    } 
-    int buffer;
-    ssize_t bytes_read = read(serial_fd, &buffer, sizeof(buffer));
-    if (bytes_read == -1 || bytes_read == 0 || bytes_read != sizeof(buffer) || buffer != test) {
-        std::cerr << "Error reading from serial port during initialization\n";
+    }
+    uint8_t response = 0;
+    ssize_t bytes_read = read(serial_fd, &response, sizeof(response));
+    if (bytes_read != sizeof(response) || response != 1) {
+        std::cerr << "Error reading from serial port during initialization, received message:" << response << std::endl;
         return; // If the read operation fails, exit the constructor
     } 
     std::cout << "New Servo_328P instance " << dev << " created, count: " << n_dev << "\n";
@@ -80,10 +81,10 @@ double Servo_328P::Rotate_to(double fraction) {
             std::cout << "Serial port reopened successfully\n";
         }
     }
-    int buffer;
-    ssize_t bytes_read = read(serial_fd, &buffer, sizeof(buffer));
-    if (bytes_read == -1 || bytes_read == 0 || bytes_read != sizeof(buffer) || buffer != message) {
-        std::cerr << "Error reading from serial port\n";
+    uint8_t response = 0;
+    ssize_t bytes_read = read(serial_fd, &response, sizeof(response));
+    if (bytes_read != sizeof(response) || response != 2) {
+        std::cerr << "Error reading from serial port during initialization, received message:" << response << std::endl;
         return -1;
     } else {
         // std::cout << "Message sent successfully: " << std::hex << message << "\n";

@@ -8,6 +8,8 @@ std::string path_duty_cycle {};
 std::string path_enable {};
 
 Servo_rpi::Servo_rpi(int dev_in, double min_rescale, double max_rescale): Servo_base(dev_in, min_rescale, max_rescale) {
+    system("pinctrl 12 a0");
+    system("pinctrl 13 a0");
     if(dev != 0 && dev != 1) {
         std::cout << "dev doesn't exist, use dev = 0." << std::endl;
         dev = 0;
