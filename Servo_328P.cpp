@@ -6,12 +6,14 @@ int Servo_328P::serial_fd = -1; // Initialize static member variable for serial 
 std::mutex Servo_328P::mtx {};
 
 Servo_328P::Servo_328P(int dev_in, double min_rescale, double max_rescale) : Servo_base(dev_in, min_rescale, max_rescale) { 
+    std::lock_guard<std::mutex> lock(mtx); // Ensure thread safety when initializing the serial port
     if(dev != 0 && dev != 1) {
         std::cerr << "dev doesn't exit, use dev = 0." << std::endl;
     }
-    std::lock_guard<std::mutex> lock(mtx); // Ensure thread safety when initializing the serial port
     ++n_dev; // Increment the static counter for the number of instances created
     if (n_dev > 1) {
+        std::cout << "Another instance of Servo_328P already exists. Not opening the serial port again.\n";
+        std::cout << "New Servo_328P instance " << dev << " created, count: " << n_dev << "\n";
         return; // Only the first instance need to open the serial port. Subsequent instances will return early to avoid multiple openings of the same serial port.
     }
     if(serial_fd != -1) {
@@ -21,9 +23,21 @@ Servo_328P::Servo_328P(int dev_in, double min_rescale, double max_rescale) : Ser
     serial_fd = open_serial();
     if (serial_fd == -1) {
         std::cerr << "Failed to open serial port for Servo_328P\n";
-    } else {
-        std::cout << "Servo_328P initialized successfully on device " << dev << "\n";
-    }
+        return; // If the serial port cannot be opened, exit the constructor
+    } 
+    unsigned int test = (FF << 28) | 0xFFFF;
+    ssize_t bytes_written = write(serial_fd, &test, sizeof(test));
+    if (bytes_written == -1) {
+        std::cerr << "Error writing to serial port during initialization\n";
+        return; // If the write operation fails, exit the constructor
+    } 
+    int buffer;
+    ssize_t bytes_read = read(serial_fd, &buffer, sizeof(buffer));
+    if (bytes_read == -1 || bytes_read == 0 || bytes_read != sizeof(buffer) || buffer != test) {
+        std::cerr << "Error reading from serial port during initialization\n";
+        return; // If the read operation fails, exit the constructor
+    } 
+    std::cout << "New Servo_328P instance " << dev << " created, count: " << n_dev << "\n";
 }
 
 Servo_328P::~Servo_328P() {
@@ -65,6 +79,14 @@ double Servo_328P::Rotate_to(double fraction) {
         } else {
             std::cout << "Serial port reopened successfully\n";
         }
+    }
+    int buffer;
+    ssize_t bytes_read = read(serial_fd, &buffer, sizeof(buffer));
+    if (bytes_read == -1 || bytes_read == 0 || bytes_read != sizeof(buffer) || buffer != message) {
+        std::cerr << "Error reading from serial port\n";
+        return -1;
+    } else {
+        // std::cout << "Message sent successfully: " << std::hex << message << "\n";
     }
     return fraction;
 }
