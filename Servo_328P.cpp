@@ -32,9 +32,18 @@ Servo_328P::Servo_328P(int dev_in, double min_rescale, double max_rescale) : Ser
         std::cerr << "Error writing to serial port during initialization\n";
         return; // If the write operation fails, exit the constructor
     }
+    usleep(100000); // Sleep for 10ms to allow the microcontroller to process the message
     char response = 0;
-    ssize_t bytes_read = read(serial_fd, &response, sizeof(response));
-    if (bytes_read != sizeof(response) || response != 1) {
+    int try_count = 0;
+    while (read(serial_fd, &response, sizeof(response)) != sizeof(response) && try_count < 3) {
+        ++try_count;
+        std::cerr << "Error reading from serial port during initialization" << std::endl;
+        usleep(10000); // Sleep for 10ms before retrying
+    }
+    if (try_count == 3) {
+        std::cerr << "Failed to read response after 3 attempts\n"; // do not return
+    }
+    if (response != 1) {
         std::cerr << "Error reading from serial port during initialization" << std::endl;
         std::cerr << "Received bytes: " << bytes_read << ", received message:" << response << std::endl;
         return; // If the read operation fails, exit the constructor
@@ -69,7 +78,7 @@ double Servo_328P::Rotate_to(double fraction) {
     while (write(serial_fd, &message, sizeof(message)) != sizeof(message) && try_count < 3) {
         ++try_count;
         std::cerr << "Error writing to serial port, attempt " << try_count << " of 3\n";
-        usleep(100000);
+        usleep(10000); // Sleep for 10ms before retrying
     }
     if (try_count == 3) {
         std::cerr << "Failed to send message after 3 attempts\n";
@@ -83,8 +92,16 @@ double Servo_328P::Rotate_to(double fraction) {
         }
     }
     char response = 0;
-    ssize_t bytes_read = read(serial_fd, &response, sizeof(response));
-    if (bytes_read != sizeof(response) || response != 2) {
+    try_count = 0;
+    while (read(serial_fd, &response, sizeof(response)) != sizeof(response) && try_count < 3) {
+        ++try_count;
+        std::cerr << "Error reading from serial port, attempt " << try_count << " of 3\n";
+        usleep(10000); // Sleep for 10ms before retrying
+    }
+    if (try_count == 3) {
+        std::cerr << "Failed to read response after 3 attempts\n"; // do not return
+    }
+    if (response != 2) {
         std::cerr << "Error reading from serial port during rotation" << std::endl;
         std::cerr << "received bytes: " << bytes_read << ", received message:" << response << std::endl;
         return -1;
