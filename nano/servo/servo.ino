@@ -16,13 +16,14 @@ void setup() {
 }
 void loop() {
   uint32_t receivedData = 0;
-  uint8_t response;
+  char response;
   if (Serial.available() >= 4) {
     Serial.readBytes((char*)&receivedData, sizeof(receivedData));
     uint16_t v = receivedData & 0xFFFF;
     if ((receivedData >> 28) == 0xF) {
       // this is test for connection
       response = 1;
+      Serial.write(&response);
     } else {
       // this is a rotate_to command
       v = MIN + RESOLUTION * v; // scale v
@@ -40,10 +41,8 @@ void loop() {
         OCR1B = v;
       }
       response = 2;
+      Serial.write(&response);
     }
-  } else {
-    response = 3;
   }
-  Serial.write(&response,1);
   delay(10);
 }

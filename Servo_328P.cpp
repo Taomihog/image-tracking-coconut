@@ -32,10 +32,11 @@ Servo_328P::Servo_328P(int dev_in, double min_rescale, double max_rescale) : Ser
         std::cerr << "Error writing to serial port during initialization\n";
         return; // If the write operation fails, exit the constructor
     }
-    uint8_t response = 0;
+    char response = 0;
     ssize_t bytes_read = read(serial_fd, &response, sizeof(response));
     if (bytes_read != sizeof(response) || response != 1) {
-        std::cerr << "Error reading from serial port during initialization, received message:" << response << std::endl;
+        std::cerr << "Error reading from serial port during initialization" << std::endl;
+        std::cerr << "Received bytes: " << bytes_read << ", received message:" << response << std::endl;
         return; // If the read operation fails, exit the constructor
     } 
     std::cout << "New Servo_328P instance " << dev << " created, count: " << n_dev << "\n";
@@ -81,7 +82,7 @@ double Servo_328P::Rotate_to(double fraction) {
             std::cout << "Serial port reopened successfully\n";
         }
     }
-    uint8_t response = 0;
+    char response = 0;
     ssize_t bytes_read = read(serial_fd, &response, sizeof(response));
     if (bytes_read != sizeof(response) || response != 2) {
         std::cerr << "Error reading from serial port during rotation" << std::endl;
