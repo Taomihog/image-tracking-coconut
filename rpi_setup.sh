@@ -9,4 +9,6 @@ sudo bash -c 'echo "dtoverlay=pwm-2chan,func=gpio,pin=12,pin2=13" >> /boot/firmw
 sudo pinctrl 12 a0
 sudo pinctrl 13 a0
 
+curl -fsSL https://raw.githubusercontent.com/arduino/arduino-cli/master/install.sh | sh
+
 sudo reboot

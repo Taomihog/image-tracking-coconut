@@ -84,7 +84,8 @@ double Servo_328P::Rotate_to(double fraction) {
     uint8_t response = 0;
     ssize_t bytes_read = read(serial_fd, &response, sizeof(response));
     if (bytes_read != sizeof(response) || response != 2) {
-        std::cerr << "Error reading from serial port during initialization, received message:" << response << std::endl;
+        std::cerr << "Error reading from serial port during rotation" << std::endl;
+        std::cerr << "received bytes: " << bytes_read << ", received message:" << response << std::endl;
         return -1;
     } else {
         // std::cout << "Message sent successfully: " << std::hex << message << "\n";
