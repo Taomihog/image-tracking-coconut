@@ -8,8 +8,11 @@ std::string path_duty_cycle {};
 std::string path_enable {};
 
 Servo_rpi::Servo_rpi(int dev_in, double min_rescale, double max_rescale): Servo_base(dev_in, min_rescale, max_rescale) {
-    system("pinctrl 12 a0");
-    system("pinctrl 13 a0");
+    static int n = system("pinctrl 12 a0 && pinctrl 13 a0");
+    if (n != 0) {
+	std::cout << "Error: Failed system call 'pinctrl 12 a0 && pinctrl 13 a0" << std::endl;
+	return;
+    }
     if(dev != 0 && dev != 1) {
         std::cout << "dev doesn't exist, use dev = 0." << std::endl;
         dev = 0;
@@ -20,6 +23,9 @@ Servo_rpi::Servo_rpi(int dev_in, double min_rescale, double max_rescale): Servo_
         path_period =     PATH + "/pwm" + std::to_string(dev) + "/period";
         path_duty_cycle = PATH + "/pwm" + std::to_string(dev) + "/duty_cycle";
         path_enable =     PATH + "/pwm" + std::to_string(dev) + "/enable";
+	std::cout << "Servo_rpi instance " << dev << " initiated successfully" << std::endl;
+    } else {
+        std::cout << "Error: Servo_rpi instance " << dev << " initiation failed!" << std::endl;
     }
 }
 
@@ -31,8 +37,10 @@ Servo_rpi::~Servo_rpi() {
 bool Servo_rpi::Enable() {
     if (WriteToFile(path_enable, "1")) {
         WriteToFile(path_period, std::to_string(PERIOD));
+	std::cout << "Servo_rpi instance " << dev << " enabled" << std::endl;
         return true;
     } else {
+	std::cout << "Error: Servo_rpi instance " << dev << " failed to enable!" << std::endl;
         return false;
     }
 }

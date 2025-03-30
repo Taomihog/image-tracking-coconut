@@ -8,7 +8,8 @@ std::mutex Servo_328P::mtx {};
 Servo_328P::Servo_328P(int dev_in, double min_rescale, double max_rescale) : Servo_base(dev_in, min_rescale, max_rescale) { 
     std::lock_guard<std::mutex> lock(mtx); // Ensure thread safety when initializing the serial port
     if(dev != 0 && dev != 1) {
-        std::cerr << "dev doesn't exit, use dev = 0." << std::endl;
+        std::cerr << "Error: dev doesn't exit, use dev = 0." << std::endl;
+	return;
     }
     ++n_dev; // Increment the static counter for the number of instances created
     if (n_dev > 1) {
@@ -22,14 +23,14 @@ Servo_328P::Servo_328P(int dev_in, double min_rescale, double max_rescale) : Ser
     }
     serial_fd = open_serial();
     if (serial_fd == -1) {
-        std::cerr << "Failed to open serial port for Servo_328P\n";
+        std::cerr << "Error: Failed to open serial port for Servo_328P\n";
         return; // If the serial port cannot be opened, exit the constructor
     }
     // special code for connection testing 
     unsigned int test = 0xF << 28;
     ssize_t bytes_written = write(serial_fd, &test, sizeof(test));
     if (bytes_written == -1) {
-        std::cerr << "Error writing to serial port during initialization\n";
+        std::cerr << "Error: Failed to write to serial port during initialization\n";
         return; // If the write operation fails, exit the constructor
     }
     usleep(100000); // Sleep for 10ms to allow the microcontroller to process the message
@@ -37,15 +38,15 @@ Servo_328P::Servo_328P(int dev_in, double min_rescale, double max_rescale) : Ser
     int try_count = 0;
     while (read(serial_fd, &response, sizeof(response)) != sizeof(response) && try_count < 3) {
         ++try_count;
-        std::cerr << "Error reading from serial port during initialization" << std::endl;
+        std::cerr << "Error: Failed to read from serial port during initialization" << std::endl;
         usleep(10000); // Sleep for 10ms before retrying
     }
     if (try_count == 3) {
-        std::cerr << "Failed to read response after 3 attempts\n"; // do not return
+        std::cerr << "Error: Failed to read response after 3 attempts\n"; // do not return
     }
     if (response != 1) {
-        std::cerr << "Error reading from serial port during initialization" << std::endl;
-        std::cerr << "Received bytes: " << bytes_read << ", received message:" << response << std::endl;
+        std::cerr << "Error: Failed to read from serial port during initialization" << std::endl;
+        std::cerr << "Received message:" << response << std::endl;
         return; // If the read operation fails, exit the constructor
     } 
     std::cout << "New Servo_328P instance " << dev << " created, count: " << n_dev << "\n";
@@ -58,9 +59,9 @@ Servo_328P::~Servo_328P() {
         return; // Only close the serial port if this is the last instance being destroyed. This prevents closing the serial port while other instances are still using it.
     }
     if (serial_fd == -1) { 
-        std::cerr << "No more Servo_328P instances, but serial_fd is already closed.\n";
+        std::cerr << "Error: No more Servo_328P instances, but serial_fd is already closed.\n";
     } else if (close(serial_fd) == -1) {
-        std::cerr << "Failed to close serial port for Servo_328P\n";
+        std::cerr << "Error: Failed to close serial port for Servo_328P\n";
     } else {
         std::cout << "Serial port closed for Servo_328P\n";
     }
@@ -77,15 +78,15 @@ double Servo_328P::Rotate_to(double fraction) {
     int try_count = 0;
     while (write(serial_fd, &message, sizeof(message)) != sizeof(message) && try_count < 3) {
         ++try_count;
-        std::cerr << "Error writing to serial port, attempt " << try_count << " of 3\n";
+        std::cerr << "Error: Failed to  write to serial port, attempt " << try_count << " of 3\n";
         usleep(10000); // Sleep for 10ms before retrying
     }
     if (try_count == 3) {
-        std::cerr << "Failed to send message after 3 attempts\n";
+        std::cerr << "Error: Failed to send message after 3 attempts\n";
         close(serial_fd); 
         serial_fd = open_serial();
         if (serial_fd == -1) {
-            std::cerr << "Failed to reopen serial port\n";
+            std::cerr << "Error: Failed to reopen serial port\n";
             return -1;
         } else {
             std::cout << "Serial port reopened successfully\n";
@@ -95,15 +96,15 @@ double Servo_328P::Rotate_to(double fraction) {
     try_count = 0;
     while (read(serial_fd, &response, sizeof(response)) != sizeof(response) && try_count < 3) {
         ++try_count;
-        std::cerr << "Error reading from serial port, attempt " << try_count << " of 3\n";
+        std::cerr << "Error: Failed to read from serial port, attempt " << try_count << " of 3\n";
         usleep(10000); // Sleep for 10ms before retrying
     }
     if (try_count == 3) {
-        std::cerr << "Failed to read response after 3 attempts\n"; // do not return
+        std::cerr << "Error: Failed to read response after 3 attempts\n"; // do not return
     }
     if (response != 2) {
-        std::cerr << "Error reading from serial port during rotation" << std::endl;
-        std::cerr << "received bytes: " << bytes_read << ", received message:" << response << std::endl;
+        std::cerr << "Error: Failed to read from serial port during rotation" << std::endl;
+        std::cerr << "Received message:" << response << std::endl;
         return -1;
     } else {
         // std::cout << "Message sent successfully: " << std::hex << message << "\n";
@@ -118,7 +119,7 @@ int Servo_328P::open_serial() {
     // Open serial port
     int serial_fd = open(port.data(), O_RDWR | O_NOCTTY);
     if (serial_fd == -1) {
-        std::cerr << "Error opening serial port!\n";
+        std::cerr << "Error: Failed to open serial port!\n";
         return 1;
     }
 
