@@ -1,5 +1,6 @@
 # Servo Library
 
+This is just an example of how to create a Python library. I will not use it now.
 This project provides Python class libraries for controlling servo motors on two different platforms: the 328P and Raspberry Pi. 
 
 ## Project Structure
