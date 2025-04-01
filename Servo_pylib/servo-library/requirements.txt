@@ -1,0 +1,18 @@
+servo-library
+├── src
+│   ├── servo_328p.py
+│   ├── servo_rpi.py
+│   └── __init__.py
+├── tests
+│   ├── test_servo_328p.py
+│   ├── test_servo_rpi.py
+│   └── __init__.py
+├── requirements.txt
+├── setup.py
+└── README.md
+
+# requirements.txt
+numpy
+pytest
+RPi.GPIO
+pyserial

@@ -66,16 +66,19 @@ if __name__ == "__main__":
 
         # Example commands
         testbit = True
+        dev = DEV_2
         while True:
-            print(1000 if testbit else 0)
-            print(move_servo(ser, DEV_1, 1000 if testbit else 0))  # Move servo 1 to mid-position
-            # sleep(1)
-            print(move_servo(ser, DEV_2, 1000 if testbit else 0)) # Move servo 2 to max position
-            print(set_motor_speed(ser, DEV_1, 255 if testbit else 0))  # Set motor 1 speed to 50%
-            print(set_motor_speed(ser, DEV_2, 255 if testbit else 0))  # Set motor 1 speed to 50%
+            print(move_servo(ser, dev, 1000))  # Move servo 1 to mid-position
+            print(set_motor_speed(ser, dev, 255))  # Set motor 1 speed to 50%
+            print(set_motor_direction(ser, dev, 1))  # Set motor 1 direction forward
 
-            # print(set_motor_direction(ser, DEV_1, testbit))  # Set motor 1 direction forward
-            # print(set_motor_direction(ser, DEV_2, testbit))  # Set motor 1 direction forward
+            
+            # print(1000 if testbit else 0)
+            # print(move_servo(ser, dev, 1000 if testbit else 0))  # Move servo 1 to mid-position
+            # print(set_motor_speed(ser, dev, 255 if testbit else 0))  # Set motor 1 speed to 50%
+            # print(set_motor_direction(ser, dev, testbit))  # Set motor 1 direction forward
+            
+
             testbit = not testbit
             sleep(1)
             # set_motor_speed(ser, DEV_2, 255)  # Set motor 1 speed to 50%
