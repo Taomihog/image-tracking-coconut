@@ -14,7 +14,19 @@ def send(pwm_id, value):
     message = (pwm_id << 28) |  (value & 0xFFFF)
     ino.write(struct.pack('<I', message))
 
-send(0, 480)
+send(0, 458) #right
 time.sleep(0.1)
-send(1, 440)
+send(1, 485) #left
 time.sleep(0.1)
+'''
+# for zero finding
+v = 350
+while True:
+    print("value: ", v)
+    str  = input("")
+    send(0, v)
+    time.sleep(0.1)
+    send(1, v)
+    time.sleep(0.1)
+    v += 5
+'''
