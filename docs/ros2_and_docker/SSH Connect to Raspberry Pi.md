@@ -1,8 +1,18 @@
-## Connect to Raspberry Pi
+# Connect to Raspberry Pi
 
 ssh taomihog@10.0.0.184
 
-docker pull ros:humble-ros-core
-docker run -it --rm ros:humble-ros-core
+understand what is a server and what is a client.
 
-taomihog@raspberrypi:~ $ docker run -it --name ros_container ros:humble-ros-core
+understand how does ssh public key authentication work. This is exactly like how the github server works.
+
+basic command:
+
+```bash
+# generate a key
+ssh-keygen -t ed25519
+# send it to server
+ssh-copy-id -i path_to_pub_key_file user@ip
+```
+
+make sure the server's sshd is enabled and started (systemctl enable, start, status coomands)

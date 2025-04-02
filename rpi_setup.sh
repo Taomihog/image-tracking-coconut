@@ -43,13 +43,29 @@ echo \
 sudo apt-get update
 sudo apt-get install docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin -y
 
-# Verify Docker installation
-sudo docker --version
-# Check if Docker is running
+# Verify Docker installation. Check if Docker is running
+sudo systemctl enable docker
+sudo systemctl start docker
 sudo systemctl status docker
+sudo docker --version
 
 # Add user to docker group
 # This allows running Docker commands without sudo
 sudo usermod -aG docker $USER
+
+# The command below won't work because these images are linux/amd64, not linux/arm64/v8
+# ROS2 installation
+# https://github.com/osrf/docker_images
+# sudo docker pull osrf/ros:jazzy-desktop
+# docker run -it --rm -v /absolute/path/to/src:/src ros:jazzy-desktop
+
+# instead, I will follow this guide:
+# https://docs.ros.org/en/jazzy/How-To-Guides/Installing-on-Raspberry-Pi.html
+docker pull ros:jazzy-ros-base
+docker run -it --rm ros:jazzy-ros-base
+
+# Or I can build image from osrf/ros github file:
+# https://github.com/osrf/docker_images/tree/master/ros/jazzy/ubuntu/noble/ros-base/Dockerfile
+# Inside the directory, run `docker build -t ros:ros_docker .`
 
 sudo reboot
