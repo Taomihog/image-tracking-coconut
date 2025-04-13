@@ -1,33 +1,44 @@
-You can run **ROS 2 in a Docker container** and write ROS 2 nodes inside it. I'll guide you step by step on setting up a **ROS 2 Docker environment** and writing **publisher/subscriber nodes** in Python and C++.
+# You can run **ROS 2 in a Docker container** and write ROS 2 nodes inside it. I'll guide you step by step on setting up a **ROS 2 Docker environment** and writing **publisher/subscriber nodes** in Python and C++
 
 ---
 
 ## **1. Set Up a ROS 2 Docker Container**
+
 ### **Pull the ROS 2 Image**
+
 Run the following to download a ROS 2 **Humble** container:
+
 ```sh
 docker pull osrf/ros:humble
 ```
+
 Other available versions: `foxy`, `iron`, etc.
 
 ### **Run the ROS 2 Container**
+
 Start a container with an interactive shell:
+
 ```sh
 docker run -it --rm --name ros2_container osrf/ros:humble bash
 ```
+
 This launches a **temporary container** that removes itself after exit (`--rm`).
 
 If you want to keep the container running in the background:
+
 ```sh
 docker run -it --name ros2_container -v $(pwd):/ros2_ws osrf/ros:humble bash
 ```
+
 - The `-v $(pwd):/ros2_ws` option mounts your current directory to `/ros2_ws` inside the container.
 - You can edit files from your host machine.
 
 ---
 
 ## **2. Create a ROS 2 Workspace in the Container**
+
 Inside the running container, set up a **ROS 2 workspace**:
+
 ```sh
 mkdir -p /ros2_ws/src
 cd /ros2_ws
@@ -39,14 +50,18 @@ source install/setup.bash
 ---
 
 ## **3. Write a ROS 2 Node**
+
 ### **Python Node (Publisher)**
+
 Inside `/ros2_ws/src`, create a package:
+
 ```sh
 cd /ros2_ws/src
 ros2 pkg create --build-type ament_python my_package
 ```
 
 Edit the node file (`my_package/my_package/talker.py`):
+
 ```python
 import rclpy
 from rclpy.node import Node
@@ -76,11 +91,13 @@ if __name__ == "__main__":
 ```
 
 Make it executable:
+
 ```sh
 chmod +x my_package/talker.py
 ```
 
 Add this to `setup.py`:
+
 ```python
 entry_points={
     'console_scripts': [
@@ -90,13 +107,16 @@ entry_points={
 ```
 
 ### **C++ Node (Subscriber)**
+
 Inside `/ros2_ws/src`, create a C++ package:
+
 ```sh
 cd /ros2_ws/src
 ros2 pkg create --build-type ament_cmake my_cpp_package
 ```
 
 Edit `src/listener.cpp`:
+
 ```cpp
 #include "rclcpp/rclcpp.hpp"
 #include "std_msgs/msg/string.hpp"
@@ -124,6 +144,7 @@ int main(int argc, char** argv) {
 ```
 
 Add to `CMakeLists.txt`:
+
 ```cmake
 add_executable(listener src/listener.cpp)
 ament_target_dependencies(listener rclcpp std_msgs)
@@ -133,7 +154,9 @@ install(TARGETS listener DESTINATION lib/${PROJECT_NAME})
 ---
 
 ## **4. Build and Run the Nodes**
+
 ### **Build Everything**
+
 ```sh
 cd /ros2_ws
 colcon build
@@ -141,16 +164,21 @@ source install/setup.bash
 ```
 
 ### **Run the Publisher**
+
 ```sh
 ros2 run my_package talker
 ```
 
 ### **Run the Subscriber**
+
 In a new terminal, enter the container:
+
 ```sh
 docker exec -it ros2_container bash
 ```
+
 Run the subscriber:
+
 ```sh
 ros2 run my_cpp_package listener
 ```
@@ -160,6 +188,7 @@ Now, you should see the messages being published and received inside the **Docke
 ---
 
 ### **Final Notes**
+
 - Use `docker commit` if you want to **save the container state**.
 - You can add a `Dockerfile` to automate the workspace setup.
 
@@ -170,6 +199,7 @@ Sure! Below is a **Dockerfile** to set up a **ROS 2 Humble development environme
 ---
 
 ### **Dockerfile for ROS 2 Development**
+
 ```dockerfile
 # Use official ROS 2 Humble image as base
 FROM osrf/ros:humble
@@ -203,20 +233,27 @@ CMD ["bash"]
 ---
 
 ### **How to Build and Use the Docker Image**
+
 #### **1. Build the Image**
+
 Run this in the directory containing the **Dockerfile**:
+
 ```sh
 docker build -t ros2-dev .
 ```
 
 #### **2. Run the Container**
+
 Start the container and mount your local workspace:
+
 ```sh
 docker run -it --name ros2_container -v $(pwd):/ros2_ws ros2-dev
 ```
+
 - `-v $(pwd):/ros2_ws` allows you to **edit files from your host** and use them inside Docker.
 
 #### **3. Create a ROS 2 Package Inside Docker**
+
 ```sh
 cd /ros2_ws/src
 ros2 pkg create --build-type ament_python my_python_pkg
@@ -225,6 +262,7 @@ cd /ros2_ws && colcon build
 ```
 
 #### **4. Run Nodes**
+
 ```sh
 source install/setup.bash
 ros2 run my_python_pkg <node_name>
@@ -234,7 +272,9 @@ ros2 run my_cpp_pkg <node_name>
 ---
 
 ### **Customization**
+
 - You can add `vim`, `nano`, or `git` for easier development:
+
   ```dockerfile
   RUN apt-get install -y nano git
   ```

@@ -1,12 +1,13 @@
-## Install ros2 using docker on raspberry pi
+# Install ros2 using docker on raspberry pi
 
-### **Installing ROS 2 on Raspberry Pi using Docker**
+## **Installing ROS 2 on Raspberry Pi using Docker**
 
 Here’s a step-by-step guide to set up ROS 2 (Humble or later) on your Raspberry Pi using Docker.
 
 ---
 
-### **1. Install Docker on Raspberry Pi**
+## **1. Install Docker on Raspberry Pi**
+
 Ensure Docker is installed and set up properly:
 
 ```bash
@@ -29,7 +30,8 @@ docker --version
 
 ---
 
-### **2. Pull the ROS 2 Docker Image**
+## **2. Pull the ROS 2 Docker Image**
+
 Choose your desired ROS 2 version and pull the official image from Docker Hub:
 
 ```bash
@@ -44,7 +46,8 @@ docker pull osrf/ros:foxy
 
 ---
 
-### **3. Run the ROS 2 Container**
+## **3. Run the ROS 2 Container**
+
 Start a container and open an interactive shell:
 
 ```bash
@@ -64,7 +67,8 @@ docker run -it --rm \
 
 ---
 
-### **4. Test ROS 2 Installation**
+## **4. Test ROS 2 Installation**
+
 Inside the container:
 
 ```bash
@@ -82,7 +86,8 @@ ros2 run demo_nodes_cpp listener
 
 ---
 
-### **5. (Optional) Save Container State**
+## **5. (Optional) Save Container State**
+
 To create a reusable image after customizing:
 
 ```bash
@@ -92,7 +97,8 @@ docker run -it ros2-custom bash
 
 ---
 
-### **6. Docker Compose (Optional)**
+## **6. Docker Compose (Optional)**
+
 Create a `docker-compose.yml` for persistent setups:
 
 ```yaml

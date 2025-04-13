@@ -10,7 +10,7 @@ By default, Docker containers use the `bridge` network mode. However, this can r
 
 A user-defined bridge network allows containers to communicate directly with each other by their container names.
 
-### On **Windows**
+On **Windows**
 
 1. Open a terminal (PowerShell or Command Prompt) and create a **user-defined bridge network**:
 
@@ -18,7 +18,7 @@ A user-defined bridge network allows containers to communicate directly with eac
    docker network create --driver bridge ros_network
    ```
 
-### On **Raspberry Pi**
+On **Raspberry Pi**
 
 1. SSH into your Raspberry Pi or access the terminal.
 
@@ -32,7 +32,7 @@ A user-defined bridge network allows containers to communicate directly with eac
 
 Now, you can run your **ROS 2 containers** on both Windows and Raspberry Pi, and attach them to the same network.
 
-### On **Windows**
+On **Windows**
 
 Run the ROS 2 container with the following command, replacing `<image_name>` with your ROS 2 Docker image:
 
@@ -40,7 +40,7 @@ Run the ROS 2 container with the following command, replacing `<image_name>` wit
 docker run -it --rm --network ros_network --name ros_win_container <image_name>
 ```
 
-### On **Raspberry Pi**
+On **Raspberry Pi**
 
 Run the ROS 2 container similarly:
 
