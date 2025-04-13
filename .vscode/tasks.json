@@ -1,0 +1,41 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+      {
+        "label": "Open SSH Session",
+        "type": "shell",
+        "command": "ssh taomihog@10.0.0.11",
+        "problemMatcher": [],
+        "isBackground": false,
+        "presentation": {
+          "panel": "dedicated",
+          "group": "env",
+          "showReuseMessage": false,
+          "clear": false
+        },
+      },
+      {
+        "label": "Run WSL",
+        "type": "shell",
+        "command": "wsl",
+        "problemMatcher": [],
+        "isBackground": false,
+        "presentation": {
+          "panel": "dedicated",
+          "group": "env",
+          "showReuseMessage": false,
+          "clear": false
+        }
+      },
+      {
+        "label": "Open Both Terminals",
+        "dependsOn": ["Open SSH Session", "Run WSL"],
+        "dependsOrder": "parallel",
+        "group": {
+            "kind": "build",
+            "isDefault": true
+          }
+      }
+    ]
+  }
+  
