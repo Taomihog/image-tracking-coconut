@@ -1,3 +1,6 @@
+#pragma once
+#include <string>
+#include "Servo_base.hpp" // Include the base class for Servo
 /*
 To enable both PWMs (GPIO pin 12 and 13):
 
@@ -25,10 +28,6 @@ pinctrl 12 a0
 pinctrl 13 a0
 ```
 */
-#pragma once
-#include <string>
-#include "Servo_base.hpp" // Include the base class for Servo
-
 constexpr int DC_L   =   500000;
 constexpr int DC_H   =  2500000;
 constexpr int PERIOD = 20000000;

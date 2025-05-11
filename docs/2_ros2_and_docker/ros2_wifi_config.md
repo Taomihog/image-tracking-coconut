@@ -1,4 +1,4 @@
-# run **ROS 2** across your **Windows host** and **Raspberry Pi 4** on the same WiFi network
+# Run **ROS 2** across your **Windows host** and **Raspberry Pi 4** on the same WiFi network
 
 ROS 2 uses **DDS (Data Distribution Service)** for communication, which relies on **UDP multicast** by default.
 

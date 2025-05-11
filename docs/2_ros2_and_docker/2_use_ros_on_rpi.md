@@ -35,7 +35,7 @@ docker run -it --rm ros:jazzy-ros-core
 
 You can also build images yourself:
 
-Clone the [docker_images git repo](https://github.com/osrf/docker_images) onto the Raspberry Pi, change in to the directory linked above, then to the directory with your preferred variant.
+Clone the docker_images git repo (https://github.com/osrf/docker_images) onto the Raspberry Pi, change in to the directory linked above, then to the directory with your preferred variant. Here I used `ros\jazzy\ubuntu\noble\desktop`
 
 Inside of the directory, build the container with:
 

@@ -4,7 +4,7 @@
       {
         "label": "Open SSH Session",
         "type": "shell",
-        "command": "ssh taomihog@10.0.0.184",
+        "command": "ssh taomihog@10.0.0.11",
         "problemMatcher": [],
         "isBackground": false,
         "presentation": {

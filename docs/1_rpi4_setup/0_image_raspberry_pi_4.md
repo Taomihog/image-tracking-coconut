@@ -6,4 +6,4 @@
 4. connect to wifi, enable SSH if required.
 5. check the ip using ifconfig
 6. remote connect from your host computer using this command: user@ip address
-7. if cannot connect via ssh, check if the wifi is on (especially after rebooting the board)
+7. if connection via ssh fails, check if the wifi is on (especially after rebooting the board)
