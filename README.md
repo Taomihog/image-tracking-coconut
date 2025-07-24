@@ -1,6 +1,9 @@
 # A robot car that can detect and follow a moving object (i.e. me)
 
-My first project
+My first robot project
+
+![robococonut1](https://github.com/Taomihog/image-tracking-coconut/blob/master/robococonut.jpeg)
+
 
 ## References
 
